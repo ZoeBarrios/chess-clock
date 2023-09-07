@@ -10,8 +10,6 @@ import ControlButton from "./ControlButton";
 export default function ChessClock({ children, times, setTimes }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [player, setPlayer] = useState(1);
-  const continueGame = times.timePlayer1 == 0 || times.timePlayer2 == 0;
-
   const refInterval = useRef(null);
 
   const handleRestart = () => {
@@ -23,6 +21,7 @@ export default function ChessClock({ children, times, setTimes }) {
   const handleStart = () => {
     clearInterval(refInterval.current);
     setIsPlaying(true);
+
     refInterval.current = setInterval(() => {
       setTimes((prevTimes) => {
         return {
@@ -40,23 +39,33 @@ export default function ChessClock({ children, times, setTimes }) {
 
   useEffect(() => {
     if (isPlaying) {
-      setTimes((prevTimes) => {
-        return {
-          ...prevTimes,
-          [`timePlayer${player == 1 ? 2 : 1}`]:
-            parseInt(prevTimes[`timePlayer${player == 1 ? 2 : 1}`]) +
-            parseInt(prevTimes.timeIncrement),
+      let newTimes;
+      const lastPLayer = player == 1 ? 2 : 1;
+      const playerName = `timePlayer${lastPLayer}`;
+      const playerTime = times[`timePlayer${lastPLayer}`];
+
+      if (playerTime + times.timeIncrement > times.time && times.mode == 3) {
+        newTimes = {
+          ...times,
+          [playerName]: times.time,
         };
-      });
+      } else {
+        newTimes = {
+          ...times,
+          [playerName]: playerTime + times.timeIncrement,
+        };
+      }
+      console.log(newTimes);
+      setTimes(newTimes);
       handleStart();
     }
   }, [player]);
 
   useEffect(() => {
-    if (continueGame) {
+    if (times.timePlayer1 == 0 || times.timePlayer2 == 0) {
       handlePause();
     }
-  }, [times]);
+  }, [times.timePlayer1, times.timePlayer2]);
 
   return (
     <div className="game-container">
@@ -72,7 +81,9 @@ export default function ChessClock({ children, times, setTimes }) {
         <ControlButton
           onClick={isPlaying ? handlePause : handleStart}
           src={isPlaying ? pauseIMG : playIMG}
-          classe={`boton ${continueGame ? "disabled" : ""}`}
+          classe={`boton ${
+            times.timePlayer1 == 0 || times.timePlayer2 == 0 ? "disabled" : ""
+          }`}
         />
         <ControlButton onClick={handleRestart} src={rewindIMG} />
       </div>
