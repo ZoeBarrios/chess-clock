@@ -1,20 +1,42 @@
 import { useEffect, useRef } from "react";
 
-export default function ButtonPlayer({ time, setPlayer, isPlaying, paused }) {
+function convertMinutesToTime(minutes) {
+  let mins = Math.floor(minutes / 60);
+  let hours = Math.floor(mins / 60);
+  let secs = Math.floor(minutes % 60);
+
+  if (mins >= 60) {
+    hours = Math.floor(mins / 60);
+    mins = Math.floor(mins % 60);
+  }
+  if (secs < 10) {
+    secs = `0${secs}`;
+  }
+  if (mins < 10) {
+    mins = `0${mins}`;
+  }
+
+  return { hours, mins, secs };
+}
+
+export default function ButtonPlayer({
+  time,
+  changePlayer,
+  myPlayer,
+  isPlaying,
+}) {
   const cardRef = useRef(null);
-  const minutes = Math.floor(time / 60);
-  let seconds = time % 60;
-  seconds = seconds < 10 ? `0${seconds}` : seconds;
+  const { hours, mins, secs } = convertMinutesToTime(time);
 
   useEffect(() => {
     if (time > 10) {
       cardRef.current.classList.remove("warning");
       cardRef.current.classList.remove("lost");
     } else {
-      if (seconds <= 10 && minutes == 0) {
+      if (secs <= 10 && mins == 0) {
         cardRef.current.classList.add("warning");
       }
-      if (seconds == 0 && minutes == 0) {
+      if (secs == 0 && mins == 0) {
         cardRef.current.classList.remove("warning");
         cardRef.current.classList.add("lost");
       }
@@ -22,16 +44,18 @@ export default function ButtonPlayer({ time, setPlayer, isPlaying, paused }) {
   }, [time]);
   return (
     <div
-      className={`boton-player ${isPlaying ? "active" : ""}`}
+      className={`boton-player ${myPlayer ? "active" : ""}`}
       ref={cardRef}
       onClick={() => {
-        if (paused) {
-          setPlayer((prevPlayer) => (prevPlayer == 1 ? 2 : 1));
+        if (isPlaying) {
+          changePlayer();
         }
       }}
     >
       <span className="clock-time">
-        {seconds == 0 && minutes == 0 ? "Perdiste" : `${minutes}:${seconds}`}
+        {hours == 0 && secs == 0 && mins == 0
+          ? "Perdiste"
+          : `${hours}:${mins}:${secs}`}
       </span>
     </div>
   );
