@@ -1,7 +1,7 @@
-import Table from "./components/Table";
+import MainRoutes from "./components/MainRoutes";
 
 function App() {
-  return <Table />;
+  return <MainRoutes></MainRoutes>;
 }
 
 export default App;

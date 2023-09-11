@@ -1,4 +1,4 @@
-export default function InputsTime({ value, handleChange, label }) {
+export default function InputsTime({ value, handleChange, label, name }) {
   return (
     <>
       <label>
@@ -6,6 +6,7 @@ export default function InputsTime({ value, handleChange, label }) {
         <input
           type="number"
           min="1"
+          name={name}
           onChange={handleChange}
           value={value}
         ></input>

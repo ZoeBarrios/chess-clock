@@ -1,59 +1,49 @@
 import { useEffect, useRef } from "react";
+import { convertSecondsToTime } from "../../Utils";
 
-function convertMinutesToTime(minutes) {
-  let mins = Math.floor(minutes / 60);
-  let hours = Math.floor(mins / 60);
-  let secs = Math.floor(minutes % 60);
-
-  if (mins >= 60) {
-    hours = Math.floor(mins / 60);
-    mins = Math.floor(mins % 60);
-  }
-  if (secs < 10) {
-    secs = `0${secs}`;
-  }
-  if (mins < 10) {
-    mins = `0${mins}`;
-  }
-
-  return { hours, mins, secs };
-}
-
-export default function ButtonPlayer({
-  time,
-  changePlayer,
-  myPlayer,
-  isPlaying,
-}) {
+export default function ButtonPlayer({ dispatch, myPlayer, game, name }) {
   const cardRef = useRef(null);
-  const { hours, mins, secs } = convertMinutesToTime(time);
+  const { hours, mins, secs } = convertSecondsToTime(
+    game[`timePlayer${myPlayer}`]
+  );
 
   useEffect(() => {
-    if (time > 10) {
+    if (game[`timePlayer${myPlayer}`] > 10) {
       cardRef.current.classList.remove("warning");
       cardRef.current.classList.remove("lost");
     } else {
-      if (secs <= 10 && mins == 0) {
+      if (
+        game[`timePlayer${myPlayer}`] <= 10 &&
+        game[`timePlayer${myPlayer}`] > 0
+      ) {
         cardRef.current.classList.add("warning");
       }
-      if (secs == 0 && mins == 0) {
+      if (game[`timePlayer${myPlayer}`] == 0) {
         cardRef.current.classList.remove("warning");
         cardRef.current.classList.add("lost");
       }
     }
-  }, [time]);
+  }, [game[`timePlayer${myPlayer}`]]);
+
   return (
     <div
-      className={`boton-player ${myPlayer ? "active" : ""}`}
+      className={`boton-player ${game.player == myPlayer ? "active" : ""}`}
+      style={myPlayer === 1 ? { transform: "rotate(180deg)" } : {}}
       ref={cardRef}
       onClick={() => {
-        if (isPlaying) {
-          changePlayer();
+        if (game.isPlaying) {
+          dispatch({ type: "SET_PLAYER" });
+
+          dispatch({ type: "ADD_MOVEMENT" });
         }
       }}
     >
+      <div className="game-info">
+        <p>Jugador: {name}</p>
+        <p>Movimientos: {game[`movements${myPlayer}`]}</p>
+      </div>
       <span className="clock-time">
-        {hours == 0 && secs == 0 && mins == 0
+        {game[`timePlayer${myPlayer}`] == 0
           ? "Perdiste"
           : `${hours}:${mins}:${secs}`}
       </span>

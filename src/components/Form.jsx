@@ -1,60 +1,81 @@
-import { useEffect, useState } from "react";
-import { INITIAL_INPUTS, MODOS_JUEGO } from "../../ModosJuego";
+import { useEffect } from "react";
+import { INITIAL_INPUTS, MODOS_JUEGO } from "../../Utils";
 import InputsTime from "./InputsTime";
+import useInputs from "../hooks/useInputs";
 
-export default function Form({ times, setTimes }) {
-  const [inputs, setInputs] = useState(INITIAL_INPUTS);
+export default function Form({ game, dispatch }) {
+  const { inputs, handleInputChange, resetInputs } = useInputs(INITIAL_INPUTS);
 
   useEffect(() => {
-    setInputs(INITIAL_INPUTS);
-  }, [times.mode]);
+    resetInputs();
+  }, [game.mode]);
 
   const handleSave = (e) => {
     e.preventDefault();
-    if (inputs.inputTime == "" && inputs.inputIncrement == "")
+    if (
+      inputs.inputIncrement == "" &&
+      inputs.inputHours == "" &&
+      inputs.inputMinutes == "" &&
+      inputs.inputSeconds == ""
+    )
       return alert("Debe ingresar un valor");
 
-    const minutes = inputs.inputTime * 60;
-    setTimes((prevTimes) => {
-      return {
-        ...prevTimes,
-        time: minutes,
-        timePlayer1: minutes,
-        timePlayer2: minutes,
+    const timeInSeconds =
+      (inputs.inputSeconds || 0) +
+      (inputs.inputMinutes * 60 || 0) +
+      (inputs.inputHours * 3600 || 0);
+    dispatch({
+      type: "SET_TIMES",
+      payload: {
+        timeInSeconds,
         timeIncrement: inputs.inputIncrement,
-      };
+      },
     });
+
     alert("Se guardaron los cambios");
   };
 
-  const handlerChangeInput = (e, accion) => {
-    const { value } = e.target;
-    setInputs((prevInputs) => {
-      return {
-        ...prevInputs,
-        [`input${accion}`]: isNaN(parseFloat(value)) ? "" : parseFloat(value),
-      };
-    });
+  const handlerChangeInput = (e) => {
+    const value = isNaN(parseFloat(e.target.value))
+      ? ""
+      : parseFloat(e.target.value);
+    handleInputChange(e.target.name, value);
   };
 
   return (
     <>
       <div>
-        <h2>{MODOS_JUEGO[times.mode].name}</h2>
-        <p>{MODOS_JUEGO[times.mode].description}</p>
+        <h2>{MODOS_JUEGO[game.mode].name}</h2>
+        <p>{MODOS_JUEGO[game.mode].description}</p>
       </div>
       <div>
         <InputsTime
-          label="Minutos"
-          handleChange={(e) => handlerChangeInput(e, "Time")}
-          value={inputs.inputTime}
+          label="Horas"
+          handleChange={handlerChangeInput}
+          value={inputs.inputHours}
+          name="inputHours"
         />
 
-        {(times.mode == 2 || times.mode == 3) && (
+        <InputsTime
+          label="Minutos"
+          handleChange={handlerChangeInput}
+          value={inputs.inputMinutes}
+          name="inputMinutes"
+        />
+
+        <InputsTime
+          label="Segundos"
+          handleChange={handlerChangeInput}
+          value={inputs.inputSeconds}
+          name="inputSeconds"
+        />
+
+        {(game.mode == 2 || game.mode == 3) && (
           <InputsTime
             label="Incremento(Segundos)"
             handleChange={(e) => handlerChangeInput(e, "Increment")}
             value={inputs.inputIncrement}
+            name="inputIncrement"
           />
         )}
       </div>

@@ -5,6 +5,10 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
+.light-theme {
+  background-color: white;
+}
+
 .game-container {
   display: grid;
   flex-direction: column;
@@ -15,13 +19,26 @@ html {
 .boton-player {
   background-color: #8c4caf;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  position: relative;
   border: none;
   color: white;
   text-decoration: none;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 10px;
+}
+
+.game-info {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  position: absolute;
+  top: 0;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 .clock-time {
