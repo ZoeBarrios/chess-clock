@@ -1,15 +1,18 @@
 import { useRef } from "react";
-import { INITIAL_STATE } from "../../Utils";
-import { navigate } from "wouter/use-location";
 
-export default function usePlay(dispatch) {
+export default function usePlay(dispatch, game) {
   const refInterval = useRef(null);
 
   const handleRestart = () => {
     clearInterval(refInterval.current);
     dispatch({ type: "SET_PLAYING", payload: false });
-    dispatch({ type: "SET_TIMES", payload: INITIAL_STATE });
-    navigate("/");
+    dispatch({
+      type: "SET_TIMES",
+      payload: {
+        timeInSeconds: game.time,
+        timeIncrement: game.timeIncrement,
+      },
+    });
   };
 
   const handleStart = () => {
@@ -25,9 +28,21 @@ export default function usePlay(dispatch) {
     clearInterval(refInterval.current);
     dispatch({ type: "SET_PLAYING", payload: false });
   };
+
+  const handleSave = (obj) => {
+    const userResponse = window.confirm(
+      "Are you sure you want to save the game?"
+    );
+    if (!userResponse) return;
+    const saveTimes = JSON.parse(localStorage.getItem("times")) || [];
+    saveTimes.push(obj);
+    localStorage.setItem("times", JSON.stringify(saveTimes));
+    alert("Game saved successfully");
+  };
   return {
     handleRestart,
     handleStart,
     handlePause,
+    handleSave,
   };
 }

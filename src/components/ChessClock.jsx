@@ -5,11 +5,15 @@ import pauseIMG from "../assets/pause.png";
 import playIMG from "../assets/play.png";
 import rewindIMG from "../assets/rewind.png";
 import ControlButton from "./ControlButton";
+import saveImg from "../assets/save.png";
 import usePlay from "../hooks/usePlay";
 
 export default function ChessClock({ children, game, dispatch }) {
-  const { handlePause, handleStart, handleRestart } = usePlay(dispatch);
-  const players = JSON.parse(localStorage.getItem("players"));
+  const { handlePause, handleStart, handleRestart, handleSave } = usePlay(
+    dispatch,
+    game
+  );
+  const players = JSON.parse(localStorage.getItem("players")) || {};
 
   useEffect(() => {
     if (game.isPlaying) {
@@ -42,6 +46,21 @@ export default function ChessClock({ children, game, dispatch }) {
           }`}
         />
         <ControlButton onClick={handleRestart} src={rewindIMG} />
+
+        <ControlButton
+          onClick={() =>
+            handleSave({
+              player1: players.player1,
+              player2: players.player2,
+              timePlayer1: game.timePlayer1,
+              timePlayer2: game.timePlayer2,
+              movements1: game.movements1,
+              movements2: game.movements2,
+              mode: game.mode,
+            })
+          }
+          src={saveImg}
+        />
       </div>
       <ButtonPlayer
         dispatch={dispatch}

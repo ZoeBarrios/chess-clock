@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { convertSecondsToTime } from "../../Utils";
 
 export default function ButtonPlayer({ dispatch, myPlayer, game, name }) {
@@ -7,28 +7,30 @@ export default function ButtonPlayer({ dispatch, myPlayer, game, name }) {
     game[`timePlayer${myPlayer}`]
   );
 
-  useEffect(() => {
-    if (game[`timePlayer${myPlayer}`] > 10) {
-      cardRef.current.classList.remove("warning");
-      cardRef.current.classList.remove("lost");
-    } else {
-      if (
-        game[`timePlayer${myPlayer}`] <= 10 &&
-        game[`timePlayer${myPlayer}`] > 0
-      ) {
-        cardRef.current.classList.add("warning");
-      }
-      if (game[`timePlayer${myPlayer}`] == 0) {
-        cardRef.current.classList.remove("warning");
-        cardRef.current.classList.add("lost");
-      }
-    }
-  }, [game[`timePlayer${myPlayer}`]]);
+  const handleClasesButton = () => {
+    return !game.isPlaying
+      ? "disabled"
+      : game.player == myPlayer
+      ? "active"
+      : "disabled";
+  };
+
+  const handleClasesColors = () => {
+    return game.player == myPlayer
+      ? game[`timePlayer${myPlayer}`] <= 10 &&
+        game[`timePlayer${myPlayer}`] != 0
+        ? "warning"
+        : game[`timePlayer${myPlayer}`] == 0
+        ? "lost"
+        : ""
+      : "";
+  };
 
   return (
     <div
-      className={`boton-player ${game.player == myPlayer ? "active" : ""}`}
-      style={myPlayer === 1 ? { transform: "rotate(180deg)" } : {}}
+      className={`boton-player  ${handleClasesColors()} ${handleClasesButton()} ${
+        myPlayer == 1 ? "rotate" : ""
+      }`}
       ref={cardRef}
       onClick={() => {
         if (game.isPlaying) {

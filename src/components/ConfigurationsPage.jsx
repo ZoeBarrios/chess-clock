@@ -1,12 +1,22 @@
-import { Link } from "wouter";
 import useInputs from "../hooks/useInputs";
+import Modal from "./Modal";
+import useModal from "../hooks/useModal";
+import ListOfPlays from "./ListOfPlays";
+import ButtonStart from "./ButtonStart";
+import InputPlayer from "./InputPlayer";
+import ComboBox from "./ComboBox";
 
 const INITIAL_INPUTS = {
   namePlayer1: "player1",
   namePlayer2: "player2",
 };
+
 export default function ConfigurationsPage() {
   const { inputs, handleInputChange } = useInputs(INITIAL_INPUTS);
+  const { isOpen, toggleModal } = useModal();
+  const root = document.getElementsByTagName("html")[0];
+
+  root.classList.remove("light-theme");
   const handleChange = (e) => {
     handleInputChange(
       e.target.name,
@@ -24,8 +34,6 @@ export default function ConfigurationsPage() {
   };
 
   const handleChangeTheme = (e) => {
-    const root = document.getElementsByTagName("html")[0];
-
     if (e.target.value === "Dark") {
       root.classList.remove("light-theme");
     } else {
@@ -34,31 +42,33 @@ export default function ConfigurationsPage() {
   };
 
   return (
-    <form className="configurations-page" style={{ color: "white" }}>
-      <h1>Configurationes iniciales</h1>
-      <label>Nombre jugador 1</label>
-      <input
-        type="text"
-        value={inputs.namePlayer1}
-        name="namePlayer1"
-        onChange={handleChange}
+    <form className="configurations-page">
+      <h1 className="title">Configurationes iniciales</h1>
+      {Object.entries(inputs).map(([key, value]) => (
+        <InputPlayer
+          key={key}
+          name={key}
+          value={value}
+          onChange={handleChange}
+          label={`Jugador ${key.slice(-1)}`}
+        />
+      ))}
+
+      <ComboBox
+        label="Tema"
+        options={["Dark", "Light"]}
+        onChange={handleChangeTheme}
       />
-      <label>Nombre jugador 2</label>
-      <input
-        type="text"
-        value={inputs.namePlayer2}
-        name="namePlayer2"
-        onChange={handleChange}
-      />
-      Theme
-      <select onChange={handleChangeTheme}>
-        <option>Dark</option>
-        <option>Light</option>
-      </select>
-      <button>Historial de ganadores</button>
-      <button onClick={handleClick}>
-        <Link to="/clock">Comenzar juego</Link>
-      </button>
+
+      <div className="container-action-buttons">
+        <button className="button" onClick={toggleModal}>
+          Partidas guardadas
+        </button>
+        <Modal onClose={toggleModal} isOpen={isOpen}>
+          <ListOfPlays />
+        </Modal>
+        <ButtonStart handleClick={handleClick} />
+      </div>
     </form>
   );
 }

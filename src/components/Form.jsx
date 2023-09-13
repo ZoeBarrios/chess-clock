@@ -45,10 +45,9 @@ export default function Form({ game, dispatch }) {
   return (
     <>
       <div>
-        <h2>{MODOS_JUEGO[game.mode].name}</h2>
         <p>{MODOS_JUEGO[game.mode].description}</p>
       </div>
-      <div>
+      <div className="container-inputs">
         <InputsTime
           label="Horas"
           handleChange={handlerChangeInput}
@@ -79,7 +78,9 @@ export default function Form({ game, dispatch }) {
           />
         )}
       </div>
-      <button onClick={handleSave}>Guardar</button>
+      <button onClick={handleSave} className="button">
+        Guardar
+      </button>
     </>
   );
 }

@@ -4,6 +4,7 @@ import gearIMG from "../assets/gear.png";
 import ControlButton from "./ControlButton";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
+import ComboBox from "./ComboBox";
 
 export default function ConfigurationClock({ game, dispatch }) {
   const { isOpen, toggleModal } = useModal();
@@ -16,13 +17,12 @@ export default function ConfigurationClock({ game, dispatch }) {
       <ControlButton src={gearIMG} onClick={toggleModal} />
       <Modal onClose={toggleModal} isOpen={isOpen}>
         <h1>Configure su reloj</h1>
-        <select value={game.mode} onChange={handleModoChange}>
-          {Object.entries(MODOS_JUEGO).map((obj) => (
-            <option key={obj[0]} value={obj[0]}>
-              {obj[1].name}
-            </option>
-          ))}
-        </select>
+
+        <ComboBox
+          value={game.mode}
+          onChange={handleModoChange}
+          options={Object.entries(MODOS_JUEGO).map((obj) => obj[1].name)}
+        />
         <form>
           <Form game={game} dispatch={dispatch} />
         </form>
