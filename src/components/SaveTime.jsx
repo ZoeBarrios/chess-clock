@@ -1,8 +1,11 @@
+import { useContext } from "react";
 import { MODOS_JUEGO, convertSecondsToTime } from "../../Utils";
 import ButtonStart from "./ButtonStart";
+import StateContext from "../context/stateContex";
 
 export default function SaveTime({ time, index }) {
-  const { player1, player2, timePlayer1, timePlayer2, mode } = time;
+  const { timePlayer1, timePlayer2, player1Name, player2Name, mode } = time;
+  const { dispatch } = useContext(StateContext);
   const timeConvertedPlayer1 = convertSecondsToTime(timePlayer1);
   const timeConvertedPlayer2 = convertSecondsToTime(timePlayer2);
 
@@ -13,11 +16,16 @@ export default function SaveTime({ time, index }) {
   };
 
   const handleClick = () => {
-    const players = {
-      player1,
-      player2,
-    };
-    localStorage.setItem("players", JSON.stringify(players));
+    dispatch({
+      type: "SET_STATE",
+      payload: {
+        ...time,
+        player: 1,
+        isPlaying: false,
+        player1Name: player1Name,
+        player2Name: player2Name,
+      },
+    });
   };
 
   return (
@@ -26,7 +34,7 @@ export default function SaveTime({ time, index }) {
         <h1>Modo de juego: {MODOS_JUEGO[mode].name}</h1>
         <div className="container-times">
           <div>
-            <p>{player1}</p>
+            <p>{player1Name}</p>
             <p>
               Time: {timeConvertedPlayer1.hours}:{timeConvertedPlayer1.mins}:
               {timeConvertedPlayer1.secs}
@@ -35,7 +43,7 @@ export default function SaveTime({ time, index }) {
           </div>
 
           <div>
-            <p>{player2}</p>
+            <p>{player2Name}</p>
             <p>
               Time: {timeConvertedPlayer2.hours}:{timeConvertedPlayer2.mins}:
               {timeConvertedPlayer2.secs}

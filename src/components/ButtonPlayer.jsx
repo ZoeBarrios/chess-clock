@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { convertSecondsToTime } from "../../Utils";
+import StateContext from "../context/stateContex";
 
-export default function ButtonPlayer({ dispatch, myPlayer, game, name }) {
+export default function ButtonPlayer({ myPlayer, name }) {
+  const { game, dispatch } = useContext(StateContext);
   const cardRef = useRef(null);
   const { hours, mins, secs } = convertSecondsToTime(
     game[`timePlayer${myPlayer}`]

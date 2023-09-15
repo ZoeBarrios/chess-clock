@@ -1,17 +1,15 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import StateContext from "../context/stateContex";
 
-export default function usePlay(dispatch, game) {
+export default function usePlay() {
   const refInterval = useRef(null);
+  const { dispatch } = useContext(StateContext);
 
   const handleRestart = () => {
     clearInterval(refInterval.current);
     dispatch({ type: "SET_PLAYING", payload: false });
     dispatch({
-      type: "SET_TIMES",
-      payload: {
-        timeInSeconds: game.time,
-        timeIncrement: game.timeIncrement,
-      },
+      type: "RESTART",
     });
   };
 

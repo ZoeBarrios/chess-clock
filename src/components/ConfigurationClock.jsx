@@ -5,9 +5,12 @@ import ControlButton from "./ControlButton";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
 import ComboBox from "./ComboBox";
+import { useContext } from "react";
+import StateContext from "../context/stateContex";
 
-export default function ConfigurationClock({ game, dispatch }) {
+export default function ConfigurationClock() {
   const { isOpen, toggleModal } = useModal();
+  const { game, dispatch } = useContext(StateContext);
   const handleModoChange = ({ target: { value } }) => {
     dispatch({ type: "SET_MODE", payload: value });
   };

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import "../stylesheet/ChessClock.css";
 import ButtonPlayer from "./ButtonPlayer";
 import pauseIMG from "../assets/pause.png";
@@ -7,13 +7,11 @@ import rewindIMG from "../assets/rewind.png";
 import ControlButton from "./ControlButton";
 import saveImg from "../assets/save.png";
 import usePlay from "../hooks/usePlay";
+import StateContext from "../context/stateContex";
 
-export default function ChessClock({ children, game, dispatch }) {
-  const { handlePause, handleStart, handleRestart, handleSave } = usePlay(
-    dispatch,
-    game
-  );
-  const players = JSON.parse(localStorage.getItem("players")) || {};
+export default function ChessClock({ children }) {
+  const { game, dispatch } = useContext(StateContext);
+  const { handlePause, handleStart, handleRestart, handleSave } = usePlay();
 
   useEffect(() => {
     if (game.isPlaying) {
@@ -29,13 +27,8 @@ export default function ChessClock({ children, game, dispatch }) {
   }, [game.timePlayer1, game.timePlayer2]);
 
   return (
-    <div className="game-container">
-      <ButtonPlayer
-        dispatch={dispatch}
-        myPlayer={1}
-        game={game}
-        name={players.player1}
-      />
+    <div className="game-container ligth">
+      <ButtonPlayer myPlayer={1} name={game.player1Name} />
       <div className="buttons-container">
         {children}
         <ControlButton
@@ -47,27 +40,9 @@ export default function ChessClock({ children, game, dispatch }) {
         />
         <ControlButton onClick={handleRestart} src={rewindIMG} />
 
-        <ControlButton
-          onClick={() =>
-            handleSave({
-              player1: players.player1,
-              player2: players.player2,
-              timePlayer1: game.timePlayer1,
-              timePlayer2: game.timePlayer2,
-              movements1: game.movements1,
-              movements2: game.movements2,
-              mode: game.mode,
-            })
-          }
-          src={saveImg}
-        />
+        <ControlButton onClick={() => handleSave(game)} src={saveImg} />
       </div>
-      <ButtonPlayer
-        dispatch={dispatch}
-        myPlayer={2}
-        game={game}
-        name={players.player2}
-      />
+      <ButtonPlayer myPlayer={2} name={game.player2Name} />
     </div>
   );
 }

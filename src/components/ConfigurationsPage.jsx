@@ -4,7 +4,10 @@ import useModal from "../hooks/useModal";
 import ListOfPlays from "./ListOfPlays";
 import ButtonStart from "./ButtonStart";
 import InputPlayer from "./InputPlayer";
-import ComboBox from "./ComboBox";
+import { useContext } from "react";
+import StateContext from "../context/stateContex";
+import { INITIAL_STATE } from "../../Utils";
+import PreferencesContext from "../context/preferencesContex";
 
 const INITIAL_INPUTS = {
   namePlayer1: "player1",
@@ -13,10 +16,10 @@ const INITIAL_INPUTS = {
 
 export default function ConfigurationsPage() {
   const { inputs, handleInputChange } = useInputs(INITIAL_INPUTS);
+  const { statePreferences, changeTheme } = useContext(PreferencesContext);
   const { isOpen, toggleModal } = useModal();
-  const root = document.getElementsByTagName("html")[0];
+  const { dispatch } = useContext(StateContext);
 
-  root.classList.remove("light-theme");
   const handleChange = (e) => {
     handleInputChange(
       e.target.name,
@@ -26,19 +29,20 @@ export default function ConfigurationsPage() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const players = {
-      player1: inputs.namePlayer1,
-      player2: inputs.namePlayer2,
-    };
-    localStorage.setItem("players", JSON.stringify(players));
+
+    dispatch({
+      type: "SET_STATE",
+      payload: {
+        ...INITIAL_STATE,
+        player1Name: inputs.namePlayer1,
+        player2Name: inputs.namePlayer2,
+      },
+    });
   };
 
   const handleChangeTheme = (e) => {
-    if (e.target.value === "Dark") {
-      root.classList.remove("light-theme");
-    } else {
-      root.classList.add("light-theme");
-    }
+    e.preventDefault();
+    changeTheme(statePreferences.theme == "dark" ? "light" : "dark");
   };
 
   return (
@@ -54,11 +58,7 @@ export default function ConfigurationsPage() {
         />
       ))}
 
-      <ComboBox
-        label="Tema"
-        options={["Dark", "Light"]}
-        onChange={handleChangeTheme}
-      />
+      <button onClick={handleChangeTheme}>Cambiar tema</button>
 
       <div className="container-action-buttons">
         <button className="button" onClick={toggleModal}>

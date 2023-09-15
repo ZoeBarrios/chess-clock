@@ -3,7 +3,7 @@ import SaveTime from "./SaveTime";
 export default function ListOfPlays() {
   const timesSaves = JSON.parse(localStorage.getItem("times")) || [];
   return (
-    <div className="scroll-bar ">
+    <div>
       {timesSaves.length > 0 ? (
         Object.entries(timesSaves).map((time, index) => (
           <div key={index}>

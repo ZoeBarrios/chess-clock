@@ -13,9 +13,17 @@ html {
 
 body {
   margin: 0;
+  background-color: var(--color-primary);
 }
 
-.light-theme {
+.dark {
+  --color-primary: black;
+  --text-color: white;
+  --player: #8c4caf;
+  --title-color: #c97df2;
+}
+
+.light {
   --color-primary: #ffbb5c;
   --text-color: black;
   --player: #f1f2cf;

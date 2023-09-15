@@ -22,10 +22,14 @@ export const INITIAL_STATE = Object.freeze({
   time: 900,
   timePlayer1: 900,
   timePlayer2: 900,
+  lastTime1: 900,
+  lastTime2: 900,
   timeIncrement: 0,
   mode: 1,
   movements1: 0,
   movements2: 0,
+  player1Name: "Player 1",
+  player2Name: "Player 2",
 });
 
 export const INITIAL_INPUTS = Object.freeze({
@@ -44,6 +48,8 @@ const TYPES = {
   SET_PLAYERS_TIMES: "SET_PLAYERS_TIMES",
   SET_CLOCK_TIMES: "SET_CLOCK_TIMES",
   ADD_MOVEMENT: "ADD_MOVEMENT",
+  RESTART: "RESTART",
+  SET_STATE: "SET_STATE",
 };
 
 const changePlayersTimes = (times, player) => {
@@ -51,12 +57,29 @@ const changePlayersTimes = (times, player) => {
   const lastPLayer = player == 1 ? 2 : 1;
   const playerName = `timePlayer${lastPLayer}`;
   const playerTime = times[`timePlayer${lastPLayer}`];
-
-  if (playerTime + times.timeIncrement > times.time && times.mode == 3) {
-    newTimes = {
-      ...times,
-      [playerName]: times.time,
-    };
+  const lastTime = times[`lastTime${lastPLayer}`];
+  let finalTime = 0;
+  if (times.mode == 3) {
+    const remainingTime = lastTime - playerTime;
+    console.log(remainingTime);
+    if (remainingTime <= 0) return times;
+    if (remainingTime > times.timeIncrement) {
+      finalTime = playerTime + times.timeIncrement;
+      newTimes = {
+        ...times,
+        [playerName]: finalTime > times.time ? times.time : finalTime,
+        [`lastTime${lastPLayer}`]:
+          finalTime > times.time ? times.time : finalTime,
+      };
+    } else {
+      finalTime = playerTime + remainingTime;
+      newTimes = {
+        ...times,
+        [playerName]: finalTime > times.time ? times.time : finalTime,
+        [`lastTime${lastPLayer}`]:
+          finalTime > times.time ? times.time : finalTime,
+      };
+    }
   } else {
     newTimes = {
       ...times,
@@ -83,6 +106,8 @@ export const gameReducer = (state, action) => {
         time: payload.timeInSeconds,
         timePlayer1: payload.timeInSeconds,
         timePlayer2: payload.timeInSeconds,
+        lastTime1: payload.timeInSeconds,
+        lastTime2: payload.timeInSeconds,
         timeIncrement: payload.timeIncrement,
       };
     case TYPES.SET_INCREMENTS:
@@ -98,6 +123,21 @@ export const gameReducer = (state, action) => {
         [`movements${state.player == 1 ? 2 : 1}`]:
           state[`movements${state.player == 1 ? 2 : 1}`] + 1,
       };
+    case TYPES.RESTART:
+      return {
+        ...state,
+        player: 1,
+        isPlaying: false,
+        timePlayer1: state.time,
+        timePlayer2: state.time,
+        lastTime1: state.time,
+        lastTime2: state.time,
+        movements1: 0,
+        movements2: 0,
+      };
+
+    case TYPES.SET_STATE:
+      return { ...state, ...payload };
     default:
       return state;
   }
