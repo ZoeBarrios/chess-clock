@@ -8,7 +8,7 @@ import ComboBox from "./ComboBox";
 import { useContext } from "react";
 import StateContext from "../context/stateContex";
 
-export default function ConfigurationClock() {
+export default function ConfigurationClock({ handlePause, handleRestart }) {
   const { isOpen, toggleModal } = useModal();
   const { game, dispatch } = useContext(StateContext);
   const handleModoChange = ({ target: { value } }) => {
@@ -17,7 +17,13 @@ export default function ConfigurationClock() {
 
   return (
     <>
-      <ControlButton src={gearIMG} onClick={toggleModal} />
+      <ControlButton
+        src={gearIMG}
+        onClick={(e) => {
+          game.isPlaying && handlePause();
+          toggleModal(e);
+        }}
+      />
       <Modal onClose={toggleModal} isOpen={isOpen}>
         <h1>Configure su reloj</h1>
 
@@ -27,7 +33,7 @@ export default function ConfigurationClock() {
           options={Object.entries(MODOS_JUEGO).map((obj) => obj[1].name)}
         />
         <form>
-          <Form game={game} dispatch={dispatch} />
+          <Form handleRestart={handleRestart} />
         </form>
       </Modal>
     </>

@@ -6,11 +6,10 @@ export default function usePlay() {
   const { dispatch } = useContext(StateContext);
 
   const handleRestart = () => {
-    clearInterval(refInterval.current);
-    dispatch({ type: "SET_PLAYING", payload: false });
     dispatch({
       type: "RESTART",
     });
+    clearInterval(refInterval.current);
   };
 
   const handleStart = () => {

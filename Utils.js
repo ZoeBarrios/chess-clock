@@ -143,14 +143,23 @@ export const gameReducer = (state, action) => {
   }
 };
 
-export function convertSecondsToTime(seconds) {
+export function convertSecondsToTime(seconds, format = "hh:mm:ss") {
   const secs = Math.floor(seconds % 60);
   const hours = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
+  let hoursStr;
+  let minsStr;
+  let secsStr;
 
-  const hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
-  const minsStr = mins < 10 ? `0${mins}` : `${mins}`;
-  const secsStr = secs < 10 ? `0${secs}` : `${secs}`;
+  if (format == "hh:mm:ss") {
+    hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
+    minsStr = mins < 10 ? `0${mins}` : `${mins}`;
+    secsStr = secs < 10 ? `0${secs}` : `${secs}`;
+  } else {
+    hoursStr = hours;
+    minsStr = mins;
+    secsStr = secs;
+  }
 
   return { hours: hoursStr, mins: minsStr, secs: secsStr };
 }

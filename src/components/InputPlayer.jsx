@@ -7,7 +7,7 @@ export default function InputPlayer({ name, value, onChange, label }) {
         value={value}
         name={name}
         onChange={onChange}
-        maxLength="6"
+        maxLength="7"
         className="input"
       />
     </label>

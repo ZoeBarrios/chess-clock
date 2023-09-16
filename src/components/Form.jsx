@@ -1,10 +1,18 @@
-import { useEffect } from "react";
-import { INITIAL_INPUTS, MODOS_JUEGO } from "../../Utils";
+import { useContext, useEffect } from "react";
+import { MODOS_JUEGO, convertSecondsToTime } from "../../Utils";
 import InputsTime from "./InputsTime";
 import useInputs from "../hooks/useInputs";
+import StateContext from "../context/stateContex";
 
-export default function Form({ game, dispatch }) {
-  const { inputs, handleInputChange, resetInputs } = useInputs(INITIAL_INPUTS);
+export default function Form({ handleRestart }) {
+  const { game, dispatch } = useContext(StateContext);
+  const { hours, mins, secs } = convertSecondsToTime(game.time, "h:m:s");
+  const { inputs, handleInputChange, resetInputs } = useInputs({
+    inputHours: hours,
+    inputMinutes: mins,
+    inputSeconds: secs,
+    inputIncrement: game.timeIncrement,
+  });
 
   useEffect(() => {
     resetInputs();
@@ -32,7 +40,11 @@ export default function Form({ game, dispatch }) {
       },
     });
 
-    alert("Se guardaron los cambios");
+    if (window.confirm("Quieres reiniciar la partida?")) {
+      alert("Se reiniciara la partida");
+      handleRestart();
+    }
+    alert("Se guardo correctamente");
   };
 
   const handlerChangeInput = (e) => {

@@ -8,8 +8,9 @@ import ControlButton from "./ControlButton";
 import saveImg from "../assets/save.png";
 import usePlay from "../hooks/usePlay";
 import StateContext from "../context/stateContex";
+import ConfigurationClock from "./ConfigurationClock";
 
-export default function ChessClock({ children }) {
+export default function ChessClock() {
   const { game, dispatch } = useContext(StateContext);
   const { handlePause, handleStart, handleRestart, handleSave } = usePlay();
 
@@ -26,11 +27,20 @@ export default function ChessClock({ children }) {
     }
   }, [game.timePlayer1, game.timePlayer2]);
 
+  useEffect(() => {
+    return () => {
+      handlePause();
+    };
+  }, []);
+
   return (
     <div className="game-container ligth">
       <ButtonPlayer myPlayer={1} name={game.player1Name} />
       <div className="buttons-container">
-        {children}
+        <ConfigurationClock
+          handlePause={handlePause}
+          handleRestart={handleRestart}
+        />
         <ControlButton
           onClick={game.isPlaying ? handlePause : handleStart}
           src={game.isPlaying ? pauseIMG : playIMG}
@@ -40,7 +50,13 @@ export default function ChessClock({ children }) {
         />
         <ControlButton onClick={handleRestart} src={rewindIMG} />
 
-        <ControlButton onClick={() => handleSave(game)} src={saveImg} />
+        <ControlButton
+          onClick={() => {
+            handlePause();
+            handleSave(game);
+          }}
+          src={saveImg}
+        />
       </div>
       <ButtonPlayer myPlayer={2} name={game.player2Name} />
     </div>
