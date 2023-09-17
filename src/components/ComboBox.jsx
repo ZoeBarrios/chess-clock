@@ -1,9 +1,6 @@
-export default function ComboBox({
-  value = undefined,
-  onChange,
-  label,
-  options,
-}) {
+import { memo } from "react";
+
+function ComboBoxComponent({ value = undefined, onChange, label, options }) {
   return (
     <>
       <label>{label}</label>
@@ -18,3 +15,5 @@ export default function ComboBox({
     </>
   );
 }
+const ComboBox = memo(ComboBoxComponent);
+export default ComboBox;

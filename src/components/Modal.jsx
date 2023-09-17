@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
+import React from "react";
 
-export default function Modal({ children, onClose, isOpen }) {
+function ModalComponent({ children, onClose, isOpen }) {
   return createPortal(
     <>
       {isOpen ? (
@@ -17,3 +18,6 @@ export default function Modal({ children, onClose, isOpen }) {
     document.getElementById("root")
   );
 }
+
+const Modal = React.memo(ModalComponent);
+export default Modal;

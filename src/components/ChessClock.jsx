@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import "../stylesheet/ChessClock.css";
 import ButtonPlayer from "./ButtonPlayer";
 import pauseIMG from "../assets/pause.png";
@@ -22,20 +22,22 @@ export default function ChessClock() {
   }, [game.player]);
 
   useEffect(() => {
-    if (game.timePlayer1 == 0 || game.timePlayer2 == 0) {
-      handlePause();
-    }
-  }, [game.timePlayer1, game.timePlayer2]);
-
-  useEffect(() => {
     return () => {
       handlePause();
     };
   }, []);
 
+  const handleSaveGame = useCallback(() => {
+    handlePause();
+    handleSave(game);
+  }, []);
   return (
     <div className="game-container ligth">
-      <ButtonPlayer myPlayer={1} name={game.player1Name} />
+      <ButtonPlayer
+        myPlayer={1}
+        name={game.player1Name}
+        handlePause={handlePause}
+      />
       <div className="buttons-container">
         <ConfigurationClock
           handlePause={handlePause}
@@ -49,16 +51,13 @@ export default function ChessClock() {
           }`}
         />
         <ControlButton onClick={handleRestart} src={rewindIMG} />
-
-        <ControlButton
-          onClick={() => {
-            handlePause();
-            handleSave(game);
-          }}
-          src={saveImg}
-        />
+        <ControlButton onClick={handleSaveGame} src={saveImg} />
       </div>
-      <ButtonPlayer myPlayer={2} name={game.player2Name} />
+      <ButtonPlayer
+        myPlayer={2}
+        name={game.player2Name}
+        handlePause={handlePause}
+      />
     </div>
   );
 }

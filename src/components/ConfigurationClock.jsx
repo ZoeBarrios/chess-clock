@@ -5,7 +5,7 @@ import ControlButton from "./ControlButton";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
 import ComboBox from "./ComboBox";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import StateContext from "../context/stateContex";
 
 export default function ConfigurationClock({ handlePause, handleRestart }) {
@@ -15,15 +15,19 @@ export default function ConfigurationClock({ handlePause, handleRestart }) {
     dispatch({ type: "SET_MODE", payload: value });
   };
 
+  const handleConfig = useCallback(
+    (e) => {
+      if (game.isPlaying) {
+        handlePause();
+      }
+      toggleModal(e);
+    },
+    [game.isPlaying, handlePause, toggleModal]
+  );
+
   return (
     <>
-      <ControlButton
-        src={gearIMG}
-        onClick={(e) => {
-          game.isPlaying && handlePause();
-          toggleModal(e);
-        }}
-      />
+      <ControlButton src={gearIMG} onClick={handleConfig} />
       <Modal onClose={toggleModal} isOpen={isOpen}>
         <h1>Configure su reloj</h1>
 
