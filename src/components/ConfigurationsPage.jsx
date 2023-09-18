@@ -34,8 +34,8 @@ export default function ConfigurationsPage() {
       type: "SET_STATE",
       payload: {
         ...INITIAL_STATE,
-        player1Name: inputs.namePlayer1,
-        player2Name: inputs.namePlayer2,
+        player1Name: inputs.namePlayer1 || "player1",
+        player2Name: inputs.namePlayer2 || "player2",
       },
     });
   };

@@ -1,5 +1,7 @@
 import { useCallback, useContext, useRef } from "react";
 import StateContext from "../context/stateContex";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function usePlay() {
   const refInterval = useRef(null);
@@ -27,14 +29,10 @@ export default function usePlay() {
   }, [dispatch]);
 
   const handleSave = useCallback((obj) => {
-    const userResponse = window.confirm(
-      "Are you sure you want to save the game?"
-    );
-    if (!userResponse) return;
     const saveTimes = JSON.parse(localStorage.getItem("times")) || [];
     saveTimes.push(obj);
     localStorage.setItem("times", JSON.stringify(saveTimes));
-    alert("Game saved successfully");
+    toast.success("Partida guardada con éxito");
   }, []);
   return {
     handleRestart,

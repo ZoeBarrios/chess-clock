@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const MODOS_JUEGO = Object.freeze({
   1: {
     name: "A finish",
@@ -162,4 +164,26 @@ export function convertSecondsToTime(seconds, format = "hh:mm:ss") {
   }
 
   return { hours: hoursStr, mins: minsStr, secs: secsStr };
+}
+export function validaciones(inputs, mode) {
+  if (Object.values(inputs).filter((value) => value === 0).length == 4) {
+    toast.error("Debe rellenar al menos un campo");
+    return false;
+  }
+
+  Object.entries(inputs).forEach(([key, value]) => {
+    if (value < 0) {
+      toast.error("No se permiten valores negativos");
+      return false;
+    }
+  });
+
+  if (mode != 1) {
+    if (inputs.inputIncrement == 0) {
+      toast.error("El incremento no puede ser 0");
+      return false;
+    }
+  }
+
+  return true;
 }

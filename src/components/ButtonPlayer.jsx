@@ -1,6 +1,7 @@
 import { memo, useContext, useEffect, useRef } from "react";
 import { convertSecondsToTime } from "../../Utils";
 import StateContext from "../context/stateContex";
+import imgReloj from "../assets/reloj.png";
 
 function ButtonPlayerComponent({ myPlayer, name, handlePause }) {
   const { game, dispatch } = useContext(StateContext);
@@ -50,7 +51,7 @@ function ButtonPlayerComponent({ myPlayer, name, handlePause }) {
       </span>
       {cardRef.current?.classList.contains("warning") ? (
         <span>
-          <img src="src\assets\reloj.png" className="clock-less-time"></img>
+          <img src={imgReloj} className="clock-less-time"></img>
         </span>
       ) : (
         ""

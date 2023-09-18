@@ -1,9 +1,10 @@
 import { useContext, useEffect } from "react";
-import { MODOS_JUEGO, convertSecondsToTime } from "../../Utils";
+import { MODOS_JUEGO, convertSecondsToTime, validaciones } from "../../Utils";
 import InputsTime from "./InputsTime";
 import useInputs from "../hooks/useInputs";
 import StateContext from "../context/stateContex";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Form({ handleRestart }) {
   const { game, dispatch } = useContext(StateContext);
   const { hours, mins, secs } = convertSecondsToTime(game.time, "h:m:s");
@@ -20,14 +21,8 @@ export default function Form({ handleRestart }) {
 
   const handleSave = (e) => {
     e.preventDefault();
-    if (
-      inputs.inputIncrement == "" &&
-      inputs.inputHours == "" &&
-      inputs.inputMinutes == "" &&
-      inputs.inputSeconds == ""
-    )
-      return alert("Debe ingresar un valor");
 
+    if (!validaciones(inputs, game.mode)) return;
     const timeInSeconds =
       (inputs.inputSeconds || 0) +
       (inputs.inputMinutes * 60 || 0) +
@@ -40,11 +35,9 @@ export default function Form({ handleRestart }) {
       },
     });
 
-    if (window.confirm("Quieres reiniciar la partida?")) {
-      alert("Se reiniciara la partida");
-      handleRestart();
-    }
-    alert("Se guardo correctamente");
+    handleRestart();
+
+    toast.success("Tiempo guardado");
   };
 
   const handlerChangeInput = (e) => {
