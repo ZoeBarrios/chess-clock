@@ -9,6 +9,7 @@ export default function InputPlayer({ name, value, onChange, label }) {
         onChange={onChange}
         maxLength="7"
         className="input"
+        autoComplete="off"
       />
     </label>
   );

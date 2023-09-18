@@ -15,7 +15,7 @@ export default function Form({ handleRestart }) {
   });
 
   useEffect(() => {
-    resetInputs();
+    resetInputs(game.mode == 1 ? true : false);
   }, [game.mode]);
 
   const handleSave = (e) => {
@@ -57,7 +57,7 @@ export default function Form({ handleRestart }) {
   return (
     <>
       <div>
-        <p>{MODOS_JUEGO[game.mode].description}</p>
+        <p className="description">{MODOS_JUEGO[game.mode].description}</p>
       </div>
       <div className="container-inputs">
         <InputsTime

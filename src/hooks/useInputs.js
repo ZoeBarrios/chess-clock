@@ -9,8 +9,15 @@ export default function useInputs(I_STATE) {
     });
   };
 
-  const resetInputs = () => {
-    setInputs(I_STATE);
+  const resetInputs = (isFinish = false) => {
+    if (isFinish) {
+      setInputs({
+        ...I_STATE,
+        inputIncrement: 0,
+      });
+    } else {
+      setInputs(I_STATE);
+    }
   };
 
   return {

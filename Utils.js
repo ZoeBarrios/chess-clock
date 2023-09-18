@@ -12,7 +12,7 @@ export const MODOS_JUEGO = Object.freeze({
   3: {
     name: "Bronstein",
     description:
-      "Consiste en determinar un tiempo para la partida y añadir un tiempo por cada jugada desde el primer movimiento. Pues si se responde antes de que se termine el tiempo adjudicado como tiempo añadido solo se suma el tiempo consumido, y si se tarda más el tiempo establecido.",
+      "La modalidad Brónstein consiste en determinar un tiempo para la partida y añadir un tiempo por cada jugada desde el primer movimiento. ¿Cuánto tiempo? Pues si se responde antes de que se termine el tiempo adjudicado como tiempo añadido solo se suma el tiempo consumido, y si se tarda más el tiempo establecido.",
   },
 });
 

@@ -30,7 +30,7 @@ export default function ChessClock() {
   const handleSaveGame = useCallback(() => {
     handlePause();
     handleSave(game);
-  }, []);
+  }, [game, handlePause, handleSave]);
   return (
     <div className="game-container ligth">
       <ButtonPlayer

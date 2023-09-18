@@ -40,8 +40,7 @@ export default function ConfigurationsPage() {
     });
   };
 
-  const handleChangeTheme = (e) => {
-    e.preventDefault();
+  const handleChangeTheme = () => {
     changeTheme(statePreferences.theme == "dark" ? "light" : "dark");
   };
 
@@ -58,7 +57,10 @@ export default function ConfigurationsPage() {
         />
       ))}
 
-      <button onClick={handleChangeTheme}>Cambiar tema</button>
+      <label className="switch">
+        <input type="checkbox" onClick={handleChangeTheme} />
+        <span className="slider"></span>
+      </label>
 
       <div className="container-action-buttons">
         <button className="button" onClick={toggleModal}>
