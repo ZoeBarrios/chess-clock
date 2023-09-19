@@ -6,6 +6,8 @@
   --title-color: #c97df2;
   --border-button: white;
   --control-button: #fafafa;
+  --lost: #a21e1e;
+  --warning: #ead33f;
 }
 
 html {
@@ -25,6 +27,8 @@ body {
   --title-color: #7c73e6;
   --border-button: #3d349f;
   --control-button: #c4c1e0;
+  --lost: #ce4b4b;
+  --warning: #e9e574;
 }
 
 .description {
@@ -363,11 +367,11 @@ a {
 }
 
 .lost {
-  background-color: red;
+  background-color: var(--lost);
 }
 
 .warning {
-  background-color: yellow;
+  background-color: var(--warning);
 }
 
 @media (min-width: 680px) {

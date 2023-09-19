@@ -3,11 +3,10 @@ import Modal from "./Modal";
 import useModal from "../hooks/useModal";
 import ListOfPlays from "./ListOfPlays";
 import ButtonStart from "./ButtonStart";
-import InputPlayer from "./InputPlayer";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import StateContext from "../context/stateContex";
 import { INITIAL_STATE } from "../../Utils";
-import PreferencesContext from "../context/preferencesContex";
+import FormConfiguration from "./FormConfiguration";
 
 const INITIAL_INPUTS = {
   namePlayer1: "player1",
@@ -15,53 +14,31 @@ const INITIAL_INPUTS = {
 };
 
 export default function ConfigurationsPage() {
-  const { inputs, handleInputChange } = useInputs(INITIAL_INPUTS);
-  const { statePreferences, changeTheme } = useContext(PreferencesContext);
   const { isOpen, toggleModal } = useModal();
   const { dispatch } = useContext(StateContext);
+  const { inputs, handleInputChange } = useInputs(INITIAL_INPUTS);
+  const handleClick = useCallback(
+    (e) => {
+      e.preventDefault();
 
-  const handleChange = (e) => {
-    handleInputChange(
-      e.target.name,
-      isNaN(e.target.value) ? e.target.value : ""
-    );
-  };
-
-  const handleClick = (e) => {
-    e.preventDefault();
-
-    dispatch({
-      type: "SET_STATE",
-      payload: {
-        ...INITIAL_STATE,
-        player1Name: inputs.namePlayer1 || "player1",
-        player2Name: inputs.namePlayer2 || "player2",
-      },
-    });
-  };
-
-  const handleChangeTheme = () => {
-    changeTheme(statePreferences.theme == "dark" ? "light" : "dark");
-  };
-
+      dispatch({
+        type: "SET_STATE",
+        payload: {
+          ...INITIAL_STATE,
+          player1Name: inputs.namePlayer1 || "player1",
+          player2Name: inputs.namePlayer2 || "player2",
+        },
+      });
+    },
+    [inputs, dispatch]
+  );
   return (
     <form className="configurations-page">
-      <h1 className="title">Configurationes iniciales</h1>
-      {Object.entries(inputs).map(([key, value]) => (
-        <InputPlayer
-          key={key}
-          name={key}
-          value={value}
-          onChange={handleChange}
-          label={`Jugador ${key.slice(-1)}`}
-        />
-      ))}
-
-      <label className="switch">
-        <input type="checkbox" onClick={handleChangeTheme} />
-        <span className="slider"></span>
-      </label>
-
+      <h1 className="title">Configuraciones iniciales</h1>
+      <FormConfiguration
+        handleInputChange={handleInputChange}
+        inputs={inputs}
+      />
       <div className="container-action-buttons">
         <button className="button" onClick={toggleModal}>
           Partidas guardadas

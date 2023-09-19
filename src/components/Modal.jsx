@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import React from "react";
+import { memo } from "react";
 
 function ModalComponent({ children, onClose, isOpen }) {
   return createPortal(
@@ -19,5 +19,5 @@ function ModalComponent({ children, onClose, isOpen }) {
   );
 }
 
-const Modal = React.memo(ModalComponent);
+const Modal = memo(ModalComponent);
 export default Modal;

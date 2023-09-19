@@ -2,16 +2,20 @@ import { memo, useContext, useEffect, useRef } from "react";
 import { convertSecondsToTime } from "../../Utils";
 import StateContext from "../context/stateContex";
 import imgReloj from "../assets/reloj.png";
+import lost from "../assets/lost.mp3";
 
 function ButtonPlayerComponent({ myPlayer, name, handlePause }) {
   const { game, dispatch } = useContext(StateContext);
   const cardRef = useRef(null);
   const iLose = game[`timePlayer${myPlayer}`] == 0;
   const playerTime = game[`timePlayer${myPlayer}`];
+  const audioRef = useRef(null);
+  const relojRef = useRef(null);
 
   const { hours, mins, secs } = convertSecondsToTime(playerTime);
   useEffect(() => {
     if (iLose) {
+      audioRef.current.play();
       cardRef.current.classList.add("lost");
       handlePause();
     } else {
@@ -25,7 +29,12 @@ function ButtonPlayerComponent({ myPlayer, name, handlePause }) {
 
   const handleClasesColors = () => {
     if (game.isPlaying && game.player == myPlayer) {
-      return playerTime <= 10 && playerTime != 0 ? "warning" : "";
+      if (playerTime <= 10 && playerTime != 0) {
+        relojRef.current.classList.remove("hidden");
+        return "warning";
+      }
+      relojRef.current.classList.add("hidden");
+      return "";
     }
   };
 
@@ -49,13 +58,14 @@ function ButtonPlayerComponent({ myPlayer, name, handlePause }) {
       <span className="clock-time">
         {iLose ? "Perdiste" : `${hours}:${mins}:${secs}`}
       </span>
-      {cardRef.current?.classList.contains("warning") ? (
-        <span>
-          <img src={imgReloj} className="clock-less-time"></img>
-        </span>
-      ) : (
-        ""
-      )}
+      <span ref={relojRef} className="hidden">
+        <img src={imgReloj} className="clock-less-time"></img>
+      </span>
+
+      <audio ref={audioRef} style={{ display: "none" }}>
+        <source src={lost} type="audio/mpeg" />
+        Tu navegador no admite la reproducción de audio.
+      </audio>
     </div>
   );
 }

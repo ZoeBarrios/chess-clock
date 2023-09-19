@@ -1,19 +1,20 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { MODOS_JUEGO, convertSecondsToTime } from "../../Utils";
 import ButtonStart from "./ButtonStart";
 import StateContext from "../context/stateContex";
 
-export default function SaveTime({ time, index }) {
+export default function SaveTime({ time, index, setMatchs }) {
   const { timePlayer1, timePlayer2, player1Name, player2Name, mode } = time;
   const { dispatch } = useContext(StateContext);
   const timeConvertedPlayer1 = convertSecondsToTime(timePlayer1);
   const timeConvertedPlayer2 = convertSecondsToTime(timePlayer2);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     const timesSaves = JSON.parse(localStorage.getItem("times")) || [];
     const newTimesSaves = timesSaves.filter((time, i) => i !== index);
     localStorage.setItem("times", JSON.stringify(newTimesSaves));
-  };
+    setMatchs(newTimesSaves);
+  }, [index, setMatchs]);
 
   const handleClick = () => {
     dispatch({

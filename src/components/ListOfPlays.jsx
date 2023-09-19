@@ -1,14 +1,18 @@
+import { useState } from "react";
 import SaveTime from "./SaveTime";
 
 export default function ListOfPlays() {
-  const timesSaves = JSON.parse(localStorage.getItem("times")) || [];
+  const [matchs, setMatchs] = useState(
+    JSON.parse(localStorage.getItem("times")) || []
+  );
+
   return (
     <div>
-      {timesSaves.length > 0 ? (
-        Object.entries(timesSaves).map((time, index) => (
+      {matchs.length > 0 ? (
+        Object.entries(matchs).map((time, index) => (
           <div key={index}>
             <ul className="matchs">
-              <SaveTime time={time[1]} index={index} />
+              <SaveTime time={time[1]} index={index} setMatchs={setMatchs} />
             </ul>
           </div>
         ))
