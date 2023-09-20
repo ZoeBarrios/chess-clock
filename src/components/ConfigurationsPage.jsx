@@ -17,21 +17,16 @@ export default function ConfigurationsPage() {
   const { isOpen, toggleModal } = useModal();
   const { dispatch } = useContext(StateContext);
   const { inputs, handleInputChange } = useInputs(INITIAL_INPUTS);
-  const handleClick = useCallback(
-    (e) => {
-      e.preventDefault();
-
-      dispatch({
-        type: "SET_STATE",
-        payload: {
-          ...INITIAL_STATE,
-          player1Name: inputs.namePlayer1 || "player1",
-          player2Name: inputs.namePlayer2 || "player2",
-        },
-      });
-    },
-    [inputs, dispatch]
-  );
+  const handleClick = useCallback(() => {
+    dispatch({
+      type: "SET_STATE",
+      payload: {
+        ...INITIAL_STATE,
+        player1Name: inputs.namePlayer1 || "player1",
+        player2Name: inputs.namePlayer2 || "player2",
+      },
+    });
+  }, [inputs, dispatch]);
   return (
     <form className="configurations-page">
       <h1 className="title">Configuraciones iniciales</h1>

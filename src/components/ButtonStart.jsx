@@ -1,10 +1,16 @@
 import { memo } from "react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 
 function ButtonStartComponent({ handleClick }) {
+  const [location, setLocation] = useLocation();
+  const redirect = (e) => {
+    e.preventDefault();
+    handleClick();
+    setLocation("/clock");
+  };
   return (
-    <button onClick={handleClick} className="button">
-      <Link to="/clock">Comenzar juego</Link>
+    <button onClick={(e) => redirect(e)} className="button">
+      Comenzar Juego
     </button>
   );
 }
