@@ -171,12 +171,12 @@ export function validaciones(inputs, mode) {
     return false;
   }
 
-  Object.entries(inputs).forEach(([key, value]) => {
-    if (value < 0) {
-      toast.error("No se permiten valores negativos");
-      return false;
-    }
-  });
+  const negValues = Object.values(inputs).filter((value) => value < 0).length;
+
+  if (negValues > 0) {
+    toast.error("No se permiten valores negativos");
+    return false;
+  }
 
   if (mode != 1) {
     if (inputs.inputIncrement == 0) {

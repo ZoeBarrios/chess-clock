@@ -287,6 +287,10 @@ input:checked + .slider:before {
   width: 90%;
 }
 
+.themeSelect > form {
+  width: 100%;
+}
+
 .matchs {
   display: flex;
   flex-direction: column;
