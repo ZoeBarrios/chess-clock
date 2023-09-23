@@ -12,7 +12,7 @@ export default function usePlay() {
       type: "RESTART",
     });
     clearInterval(refInterval.current);
-  }, [dispatch]);
+  }, []);
 
   const handleStart = useCallback(() => {
     clearInterval(refInterval.current);
@@ -21,12 +21,12 @@ export default function usePlay() {
     refInterval.current = setInterval(() => {
       dispatch({ type: "SET_CLOCK_TIMES" });
     }, 1000);
-  }, [dispatch]);
+  }, []);
 
   const handlePause = useCallback(() => {
     clearInterval(refInterval.current);
     dispatch({ type: "SET_PLAYING", payload: false });
-  }, [dispatch]);
+  }, []);
 
   const handleSave = useCallback((obj) => {
     const saveTimes = JSON.parse(localStorage.getItem("times")) || [];

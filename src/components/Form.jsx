@@ -5,7 +5,7 @@ import useInputs from "../hooks/useInputs";
 import StateContext from "../context/stateContex";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default function Form({ handleRestart }) {
+export default function Form({ handleRestart, toggleModal }) {
   const { game, dispatch } = useContext(StateContext);
   const { hours, mins, secs } = convertSecondsToTime(game.time, "h:m:s");
   const { inputs, handleInputChange, resetInputs } = useInputs({
@@ -38,6 +38,7 @@ export default function Form({ handleRestart }) {
     handleRestart();
 
     toast.success("Tiempo guardado");
+    toggleModal(e);
   };
 
   const handlerChangeInput = (e) => {

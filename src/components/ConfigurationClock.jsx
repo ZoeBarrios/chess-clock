@@ -11,9 +11,9 @@ import StateContext from "../context/stateContex";
 export default function ConfigurationClock({ handlePause, handleRestart }) {
   const { isOpen, toggleModal } = useModal();
   const { game, dispatch } = useContext(StateContext);
-  const handleModoChange = ({ target: { value } }) => {
+  const handleModoChange = useCallback(({ target: { value } }) => {
     dispatch({ type: "SET_MODE", payload: value });
-  };
+  }, []);
 
   const handleConfig = useCallback(
     (e) => {
@@ -37,7 +37,7 @@ export default function ConfigurationClock({ handlePause, handleRestart }) {
           options={Object.entries(MODOS_JUEGO).map((obj) => obj[1].name)}
         />
         <form>
-          <Form handleRestart={handleRestart} />
+          <Form handleRestart={handleRestart} toggleModal={toggleModal} />
         </form>
       </Modal>
     </>

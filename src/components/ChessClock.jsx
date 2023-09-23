@@ -1,18 +1,16 @@
 import { useCallback, useContext, useEffect } from "react";
 import "../stylesheet/ChessClock.css";
 import ButtonPlayer from "./ButtonPlayer";
-import pauseIMG from "../assets/pause.png";
-import playIMG from "../assets/play.png";
-import rewindIMG from "../assets/rewind.png";
-import ControlButton from "./ControlButton";
-import saveImg from "../assets/save.png";
 import usePlay from "../hooks/usePlay";
 import StateContext from "../context/stateContex";
-import ConfigurationClock from "./ConfigurationClock";
+import ContainerButtons from "./ContainerButtons";
 
 export default function ChessClock() {
   const { game, dispatch } = useContext(StateContext);
   const { handlePause, handleStart, handleRestart, handleSave } = usePlay();
+
+  //Proximamente lo estare mejorando para que sea mas eficiente
+  //Agradeceria recomendaciones ya que me gustaria mejorar mas en ese aspecto  me cuesta visualizarlo
 
   useEffect(() => {
     if (game.isPlaying) {
@@ -27,10 +25,6 @@ export default function ChessClock() {
     };
   }, []);
 
-  const handleSaveGame = useCallback(() => {
-    handlePause();
-    handleSave(game);
-  }, [game, handlePause, handleSave]);
   return (
     <div className="game-container ligth">
       <ButtonPlayer
@@ -38,21 +32,14 @@ export default function ChessClock() {
         name={game.player1Name}
         handlePause={handlePause}
       />
-      <div className="buttons-container">
-        <ConfigurationClock
-          handlePause={handlePause}
-          handleRestart={handleRestart}
-        />
-        <ControlButton
-          onClick={game.isPlaying ? handlePause : handleStart}
-          src={game.isPlaying ? pauseIMG : playIMG}
-          classe={`boton ${
-            game.timePlayer1 == 0 || game.timePlayer2 == 0 ? "disabled" : ""
-          }`}
-        />
-        <ControlButton onClick={handleRestart} src={rewindIMG} />
-        <ControlButton onClick={handleSaveGame} src={saveImg} />
-      </div>
+      <ContainerButtons
+        game={game}
+        handlePause={handlePause}
+        handleRestart={handleRestart}
+        handleStart={handleStart}
+        handleSave={handleSave}
+      />
+
       <ButtonPlayer
         myPlayer={2}
         name={game.player2Name}
